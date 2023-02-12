@@ -33,4 +33,6 @@ jobs:
       with:
         generate_release_notes: true
         files: ${{ github.workspace }}/target/chatsync_bukkit-*.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
