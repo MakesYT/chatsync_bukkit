@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 public class Chatsync extends JavaPlugin implements Listener {
     public Logger logger = this.getLogger();
-
+//1
     Client c;
     Map<String, Object> msg = new HashMap<>();
 
