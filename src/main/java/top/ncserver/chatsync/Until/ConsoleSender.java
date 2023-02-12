@@ -68,6 +68,11 @@ public class ConsoleSender implements ConsoleCommandSender {
     }
 
     @Override
+    public Spigot spigot() {
+        return null;
+    }
+
+    @Override
     public void sendMessage(String message) {
         this.output.add(message);
         send();
@@ -79,6 +84,17 @@ public class ConsoleSender implements ConsoleCommandSender {
             sendMessage(msg);
         }
     }
+
+    @Override
+    public void sendMessage(UUID uuid, String s) {
+
+    }
+
+    @Override
+    public void sendMessage(UUID uuid, String[] strings) {
+
+    }
+
 
     @Override
     public boolean isPermissionSet(String s) {
@@ -111,10 +127,7 @@ public class ConsoleSender implements ConsoleCommandSender {
     }
 
     // just throw UnsupportedOperationException - we never use any of these methods
-    @Override
-    public Spigot spigot() {
-        throw new UnsupportedOperationException();
-    }
+
 
     @Override
     public boolean isConversing() {
@@ -142,6 +155,11 @@ public class ConsoleSender implements ConsoleCommandSender {
 
     @Override
     public void sendRawMessage(String s) {
+    }
+
+    @Override
+    public void sendRawMessage(UUID uuid, String s) {
+
     }
 
     @Override

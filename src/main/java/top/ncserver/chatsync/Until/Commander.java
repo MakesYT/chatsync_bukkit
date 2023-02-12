@@ -10,10 +10,7 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Commander implements CommandSender{
     public List<String> message = new ArrayList<>();
@@ -30,6 +27,17 @@ public class Commander implements CommandSender{
     public void sendMessage(String[] messages) {
         this.message.addAll(Arrays.asList(messages));
     }
+
+    @Override
+    public void sendMessage(UUID uuid, String s) {
+
+    }
+
+    @Override
+    public void sendMessage(UUID uuid, String[] strings) {
+
+    }
+
 
     public Server getServer() {
         return Bukkit.getServer();
