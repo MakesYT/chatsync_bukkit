@@ -1,0 +1,13 @@
+# .github/release.yml
+
+changelog:
+  categories:
+    - title: 更新日志
+      labels:
+        - '*'
+      exclude:
+        labels:
+          - *-beta
+    - title: 测试版
+      labels:
+        - *-beta
