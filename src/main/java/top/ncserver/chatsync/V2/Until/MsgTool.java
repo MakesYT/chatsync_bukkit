@@ -78,10 +78,7 @@ public class MsgTool {
                     }
                 }
                 Chatsync.getPlugin(Chatsync.class).logger.info("收到图片");
-                for (Object player : players) {
-                    ((Player) player).getPlayer().sendMessage(msg1);
-                }
-                ImgTools.sendImg(players,jsonObject.getString("data"));
+                ImgTools.sendImg(msg1, players, jsonObject.getString("data"));
             }
             case "command":{
                 if (jsonObject.getString("command").equals("/ls")) {
