@@ -12,7 +12,12 @@ import java.nio.charset.StandardCharsets;
 public class ImgTools {
     private static final int IDX = 6969;
     private static final String channel = "chatimg:img";
-    private static int ImgID=0;
+    private static int ImgID = 0;
+
+    public static int getImgID() {
+        return ImgID++;
+    }
+
     public static void sendImg(String sender, Object[] player, String base64) {
 
 
@@ -60,11 +65,6 @@ public class ImgTools {
         buf.writeBytes(bytes);
         player.sendPluginMessage(Chatsync.getPlugin(Chatsync.class), channel, buf.array());
     }
-    private String read(byte[] array) {
-        ByteBuf buf = Unpooled.wrappedBuffer(array);
-        if (buf.readUnsignedByte() == IDX) {
-            return buf.toString(StandardCharsets.UTF_8);
-        } else throw new RuntimeException();
-    }
+
 
 }
