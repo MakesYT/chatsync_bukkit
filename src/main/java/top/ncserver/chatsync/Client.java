@@ -47,36 +47,31 @@ public class Client extends BukkitRunnable {
                         }
                     }else if (stateMachineEnum.equals(StateMachineEnum.SESSION_CLOSED)){
                         logger.warning("连接丢失");
-                        isConnected=false;
-                        new BukkitRunnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                while (!isConnected){
-
-                                    try {
-                                        Thread.sleep(5000);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
+                        isConnected = false;
+                        if (!Chatsync.isOnDisable) {
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    while (!isConnected && Chatsync.getPlugin(Chatsync.class).isEnabled() && !Chatsync.isOnDisable) {
+                                        try {
+                                            Thread.sleep(5000);
+                                        } catch (InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                        connection(config.getString("ip"), config.getInt("port"));
                                     }
-                                    connection(config.getString("ip"), config.getInt("port"));
+                                    this.cancel();
                                 }
-                                //logger.info("2");
-                                this.cancel();
-                            }
-                        }.runTaskAsynchronously(Chatsync.getPlugin(Chatsync.class));
+                            }.runTaskAsynchronously(Chatsync.getPlugin(Chatsync.class));
+                        }
+
                     }
                 }
             };
 
             AioQuickClient client = new AioQuickClient(host, port, new StringProtocol(), processor);
             session = client.start();
-
-
         } catch (IOException ignored) {
-
-
         }
 
     }
@@ -85,16 +80,22 @@ public class Client extends BukkitRunnable {
     public void run() {
         File configFile = new File(Chatsync.getPlugin(Chatsync.class).getDataFolder(), "config.yml");
         config = YamlConfiguration.loadConfiguration(configFile);
-        while (!isConnected){
-
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            connection(config.getString("ip"), config.getInt("port"));
+        if (!Chatsync.isOnDisable) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    while (!isConnected && Chatsync.getPlugin(Chatsync.class).isEnabled() && !Chatsync.isOnDisable) {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        connection(config.getString("ip"), config.getInt("port"));
+                    }
+                    this.cancel();
+                }
+            }.runTaskAsynchronously(Chatsync.getPlugin(Chatsync.class));
         }
-        logger.info("重连线程已关闭");
         this.cancel();
     }
 }

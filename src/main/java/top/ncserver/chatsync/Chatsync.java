@@ -52,6 +52,7 @@ public class Chatsync extends JavaPlugin implements Listener {
     }
 
     private static final String channel = "chatimg:img";
+    public static boolean isOnDisable = false;
     ///接收来自客户端的图片,但由于同步原因,使用uuid作为唯一键,防止冲突
     public static Map<String, Img> imgMap = new LinkedHashMap<String, Img>();
 
@@ -114,6 +115,7 @@ public class Chatsync extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        isOnDisable = true;
         c.cancel();
         try {
             Client.session.close();
@@ -184,7 +186,6 @@ public class Chatsync extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-
         msg.clear();
         msg.put("type", "playerJoinAndQuit");
         msg.put("player", event.getPlayer().getDisplayName());
