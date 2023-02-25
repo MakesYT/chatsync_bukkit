@@ -1,7 +1,6 @@
 package top.ncserver.chatsync;
 
 
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.smartboot.socket.StateMachineEnum;
@@ -11,15 +10,15 @@ import org.smartboot.socket.transport.AioQuickClient;
 import org.smartboot.socket.transport.AioSession;
 import top.ncserver.chatsync.V2.Until.MsgTool;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
+
+import static top.ncserver.chatsync.Chatsync.config;
 
 public class Client extends BukkitRunnable {
     public static AioSession session;
     public static boolean isConnected=false;
-    public static Logger logger=Chatsync.getPlugin(Chatsync.class).getLogger();
-    public static YamlConfiguration config;
+    public final static Logger logger=Chatsync.getPlugin(Chatsync.class).getLogger();
     public static void connection(String host, int port) {
         try {
             AbstractMessageProcessor<String> processor = new AbstractMessageProcessor<String>(){
@@ -78,8 +77,6 @@ public class Client extends BukkitRunnable {
 
     @Override
     public void run() {
-        File configFile = new File(Chatsync.getPlugin(Chatsync.class).getDataFolder(), "config.yml");
-        config = YamlConfiguration.loadConfiguration(configFile);
         if (!Chatsync.isOnDisable) {
             new BukkitRunnable() {
                 @Override

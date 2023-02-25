@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,6 +36,7 @@ public class Chatsync extends JavaPlugin implements Listener {
     private static final int IDX = 6969;
     Client c;
     Map<String, Object> msg = new HashMap<>();
+    public static YamlConfiguration config ;
 
     public static void copyFile(InputStream inputStream, File file) {
         try {
@@ -55,14 +57,6 @@ public class Chatsync extends JavaPlugin implements Listener {
     public static boolean isOnDisable = false;
     ///接收来自客户端的图片,但由于同步原因,使用uuid作为唯一键,防止冲突
     public static Map<String, Img> imgMap = new LinkedHashMap<String, Img>();
-
-    private static void send(Player player, String msg) {
-        byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
-        ByteBuf buf = Unpooled.buffer(bytes.length + 1);
-        buf.writeByte(IDX);
-        buf.writeBytes(bytes);
-        player.sendPluginMessage(Chatsync.getPlugin(Chatsync.class), channel, buf.array());
-    }
 
     @Override
     public void onEnable() {
@@ -94,23 +88,25 @@ public class Chatsync extends JavaPlugin implements Listener {
         File configFile = new File(Chatsync.getPlugin(Chatsync.class).getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
-            copyFile(Chatsync.getPlugin(Chatsync.class).getResource("config.yml"), configFile);
+            copyFile(this.getResource("config.yml"), configFile);
 
-            Chatsync.getPlugin(Chatsync.class).getLogger().info("File: 已生成 config.yml 文件");
+            this.getLogger().info("File: 已生成 config.yml 文件");
         }
+        config = YamlConfiguration.loadConfiguration(configFile);
+
         Metrics metrics = new Metrics(this, 17411);
         Bukkit.getPluginCommand("qqmsg").setExecutor(this);
         Bukkit.getPluginManager().registerEvents(this, this);
+
+        c = new Client();
+        c.runTaskAsynchronously(this);
+
+
         logger.info("聊天同步插件已加载");
-        logger.info("尝试连接");
-        System.out.println("连接丢失,重新连接");
         Object[] players = this.getServer().getOnlinePlayers().toArray();
         for (Object player : players) {
             ((Player) player).getPlayer().sendMessage("§a[消息同步]消息同步插件加载成功,当前版本:" + getPlugin(this.getClass()).getDescription().getVersion());
         }
-        c = new Client();
-        c.runTaskAsynchronously(this);
-
     }
 
     @Override
