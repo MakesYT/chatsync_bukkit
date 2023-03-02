@@ -25,6 +25,10 @@ public class Img {
         return packages.size() == packageNum;
     }
 
+    public String getState() {
+        return packages.size() + "/" + packageNum;
+    }
+
     public String getData() {
         StringBuilder sb = new StringBuilder();
         if (allReceived()) {

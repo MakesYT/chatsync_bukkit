@@ -63,6 +63,7 @@ public class Chatsync extends JavaPlugin implements Listener {
         getServer().getMessenger().registerIncomingPluginChannel(this, channel,
                 (channel, player, message) -> {
                     String msg = read(message);
+                    msg = msg.substring(msg.indexOf("{"));
                     if (msg.contains("base64imgdata")) {
                         try {
                             JsonObject jsonObject = new JsonParser().parse(msg).getAsJsonObject();
@@ -77,10 +78,12 @@ public class Chatsync extends JavaPlugin implements Listener {
                             }
                             Img img = imgMap.get(imgID);
                             if (img.allReceived()) {
-                                ImgTools.sendImg(jsonObject.get("sender").getAsString(), this.getServer().getOnlinePlayers().toArray(), img.getData());
+                                Object[] players = Chatsync.getPlugin(Chatsync.class).getServer().getOnlinePlayers().toArray();
+                                ImgTools.sendImg("[" + jsonObject.get("sender").getAsString() + "]:", players, img.getData());
                             }
 
                         } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -154,9 +157,8 @@ public class Chatsync extends JavaPlugin implements Listener {
 
     private String read(byte[] array) {
         ByteBuf buf = Unpooled.wrappedBuffer(array);
-        if (buf.readUnsignedByte() == IDX) {
-            return buf.toString(StandardCharsets.UTF_8);
-        } else throw new RuntimeException();
+        return buf.toString(StandardCharsets.UTF_8);
+
     }
 
     @EventHandler
