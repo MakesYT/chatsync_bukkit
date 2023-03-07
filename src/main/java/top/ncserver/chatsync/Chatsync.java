@@ -9,12 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import top.ncserver.chatsync.Until.Metrics;
 import top.ncserver.chatsync.V2.Until.Img;
@@ -22,36 +16,18 @@ import top.ncserver.chatsync.V2.Until.ImgTools;
 import top.ncserver.chatsync.V2.Until.MsgTool;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class Chatsync extends JavaPlugin implements Listener {
+public class Chatsync extends JavaPlugin {
     public Logger logger = this.getLogger();
     private static final int IDX = 6969;
     Client c;
     Map<String, Object> msg = new HashMap<>();
-    public static YamlConfiguration config ;
-
-    public static void copyFile(InputStream inputStream, File file) {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            byte[] arrayOfByte = new byte[63];
-            int i;
-            while ((i = inputStream.read(arrayOfByte)) > 0) {
-                fileOutputStream.write(arrayOfByte, 0, i);
-            }
-            fileOutputStream.close();
-            inputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    public static YamlConfiguration config;
 
     private static final String channel = "chatimg:img";
     public static boolean isOnDisable = false;
@@ -78,6 +54,13 @@ public class Chatsync extends JavaPlugin implements Listener {
                             }
                             Img img = imgMap.get(imgID);
                             if (img.allReceived()) {
+                                Map<String, Object> msgq = new HashMap<>();
+                                msgq.put("type", "img");
+                                msgq.put("player", jsonObject.get("sender").getAsString());
+                                msgq.put("msg", img.getData());
+                                JSONObject jo = new JSONObject(msgq);
+                                MsgTool.msgSend(Client.session, jo.toJSONString());
+
                                 Object[] players = Chatsync.getPlugin(Chatsync.class).getServer().getOnlinePlayers().toArray();
                                 ImgTools.sendImg("[" + jsonObject.get("sender").getAsString() + "]:", players, img.getData());
                             }
@@ -89,17 +72,17 @@ public class Chatsync extends JavaPlugin implements Listener {
                 });
         getServer().getMessenger().registerOutgoingPluginChannel(this, channel);
         File configFile = new File(Chatsync.getPlugin(Chatsync.class).getDataFolder(), "config.yml");
+
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
-            copyFile(this.getResource("config.yml"), configFile);
-
+            saveResource("config.yml", true);
             this.getLogger().info("File: 已生成 config.yml 文件");
         }
         config = YamlConfiguration.loadConfiguration(configFile);
 
         Metrics metrics = new Metrics(this, 17411);
         Bukkit.getPluginCommand("qqmsg").setExecutor(this);
-        Bukkit.getPluginManager().registerEvents(this, this);
+        Bukkit.getPluginManager().registerEvents(new top.ncserver.chatsync.V2.Until.Listener(), this);
 
         c = new Client();
         c.runTaskAsynchronously(this);
@@ -144,16 +127,7 @@ public class Chatsync extends JavaPlugin implements Listener {
         return true;
     }
 
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent event) {
-        msg.clear();
-        msg.put("type", "msg");
-        msg.put("sender", event.getPlayer().getDisplayName());
-        msg.put("msg", event.getMessage());
-        JSONObject jo = new JSONObject(msg);
-        MsgTool.msgSend(Client.session, jo.toJSONString());
 
-    }
 
     private String read(byte[] array) {
         ByteBuf buf = Unpooled.wrappedBuffer(array);
@@ -161,46 +135,7 @@ public class Chatsync extends JavaPlugin implements Listener {
 
     }
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        msg.clear();
-        msg.put("type", "playerJoinAndQuit");
-        msg.put("player", event.getPlayer().getDisplayName());
-        msg.put("msg", "加入了服务器");
-        JSONObject jo = new JSONObject(msg);
-        MsgTool.msgSend(Client.session, jo.toJSONString());
 
-        Player player = event.getPlayer();
-        try {
-            Class<? extends CommandSender> senderClass = player.getClass();
-            Method addChannel = senderClass.getDeclaredMethod("addChannel", String.class);
-            addChannel.setAccessible(true);
-            addChannel.invoke(player, channel);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        msg.clear();
-        msg.put("type", "playerJoinAndQuit");
-        msg.put("player", event.getPlayer().getDisplayName());
-        msg.put("msg", "退出了服务器");
-        JSONObject jo = new JSONObject(msg);
-        MsgTool.msgSend(Client.session, jo.toJSONString());
-    }
-
-    @EventHandler
-    public void onDeath(PlayerDeathEvent event) {
-        msg.clear();
-        msg.put("type", "playerDeath");
-        msg.put("player", event.getEntity().getDisplayName());
-        msg.put("msg", event.getDeathMessage());
-        JSONObject jo = new JSONObject(msg);
-        MsgTool.msgSend(Client.session, jo.toJSONString());
-    }
 
 
 }
