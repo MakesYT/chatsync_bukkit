@@ -62,6 +62,7 @@ public class Listener implements org.bukkit.event.Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
+
         msg.clear();
         msg.put("type", "playerDeath");
         msg.put("player", event.getEntity().getDisplayName());

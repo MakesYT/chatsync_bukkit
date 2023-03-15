@@ -28,7 +28,7 @@ public class ImgTools {
                 JSONObject json = new JSONObject();
                 json.put("id", imgId);
                 json.put("base64imgdata", "base64imgdata");
-                int length = 4096;
+                int length = 1024 * 30;
                 int n = (base64.length() + length - 1) / length; //获取整个字符串可以被切割成字符子串的个数
                 json.put("packageNum", n);
                 String[] split = new String[n];

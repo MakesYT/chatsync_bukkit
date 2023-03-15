@@ -13,7 +13,7 @@ import top.ncserver.chatsync.V2.Until.MsgTool;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import static top.ncserver.chatsync.Chatsync.config;
+
 
 public class Client extends BukkitRunnable {
     public static AioSession session;
@@ -57,7 +57,7 @@ public class Client extends BukkitRunnable {
                                         } catch (InterruptedException e) {
                                             throw new RuntimeException(e);
                                         }
-                                        connection(config.getString("ip"), config.getInt("port"));
+                                        connection(Chatsync.getPlugin(Chatsync.class).config.getString("ip"), Chatsync.getPlugin(Chatsync.class).config.getInt("port"));
                                     }
                                     this.cancel();
                                 }
@@ -87,7 +87,7 @@ public class Client extends BukkitRunnable {
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
-                        connection(config.getString("ip"), config.getInt("port"));
+                        connection(Chatsync.getPlugin(Chatsync.class).config.getString("ip"), Chatsync.getPlugin(Chatsync.class).config.getInt("port"));
                     }
                     this.cancel();
                 }
