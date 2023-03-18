@@ -54,6 +54,7 @@ public class Chatsync extends JavaPlugin {
                             }
                             Img img = imgMap.get(imgID);
                             if (img.allReceived()) {
+                                logger.info("图片接收完成");
                                 Map<String, Object> msgq = new HashMap<>();
                                 msgq.put("type", "img");
                                 msgq.put("player", jsonObject.get("sender").getAsString());
