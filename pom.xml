@@ -12,7 +12,7 @@
     </repositories>
     <groupId>top.ncserver</groupId>
     <artifactId>chatsync_bukkit</artifactId>
-    <version>2.3.2</version>
+    <version>2.3.3</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

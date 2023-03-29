@@ -35,22 +35,9 @@ public class MsgTool {
             case "msg":{
                 if (syncMsg)
                 {
-                    String msg1=null;
-                    switch (jsonObject.getInteger("permission")) {
-
-                        case 0: {
-                            msg1 = "[玩家][" + jsonObject.getString("sender") + "]:" + jsonObject.getString("msg");
-                            break;
-                        }
-                        case 1: {
-                            msg1 = "[\u00A7c管理员\u00A7r][" + jsonObject.getString("sender") + "]:" + jsonObject.getString("msg");
-                            break;
-                        }
-                        case 2: {
-                            msg1 = "[\u00A76腐竹\u00A7r][" + jsonObject.getString("sender") + "]:" + jsonObject.getString("msg");
-                            break;
-                        }
-                    }
+                    String msg1 = Chatsync.config.getConfigurationSection("qqMsgStyle").getString(String.valueOf(jsonObject.getInteger("permission")));
+                    msg1 = msg1.replace("%s%", jsonObject.getString("sender"));
+                    msg1 = msg1.replace("%msg%", jsonObject.getString("msg"));
                     Chatsync.getPlugin(Chatsync.class).logger.info(msg1);
                     for (Object player : players) {
                         ((Player) player).getPlayer().sendMessage(msg1);
@@ -60,23 +47,10 @@ public class MsgTool {
                 }
                 break;
             }
-            case "img":{
-                String msg1=null;
-                switch (jsonObject.getInteger("permission")) {
-
-                    case 0: {
-                        msg1 = "[玩家][" + jsonObject.getString("sender") + "]:" ;
-                        break;
-                    }
-                    case 1: {
-                        msg1 = "[\u00A7c管理员\u00A7r][" + jsonObject.getString("sender") + "]:";
-                        break;
-                    }
-                    case 2: {
-                        msg1 = "[\u00A76腐竹\u00A7r][" + jsonObject.getString("sender") + "]:" ;
-                        break;
-                    }
-                }
+            case "img": {
+                String msg1 = Chatsync.config.getConfigurationSection("qqMsgStyle").getString(String.valueOf(jsonObject.getInteger("permission")));
+                msg1 = msg1.replace("%s%", jsonObject.getString("sender"));
+                msg1 = msg1.replace("%msg%", "");
                 Chatsync.getPlugin(Chatsync.class).logger.info("收到图片");
                 ImgTools.sendImg(msg1, players, jsonObject.getString("data"));
             }
@@ -85,10 +59,11 @@ public class MsgTool {
                     Chatsync.getPlugin(Chatsync.class).logger.info("QQ群[" + jsonObject.getString("sender") + "]查询了玩家在线数量");
                     msg.put("type", "playerList");
                     msg.put("online", players.length);
-                    String list = null;
+                    StringBuilder listBuilder = new StringBuilder();
                     for (Object player : players) {
-                        list = list + "," + ((Player) player).getPlayer().getDisplayName();
+                        listBuilder.append(",").append(((Player) player).getPlayer().getDisplayName());
                     }
+                    String list = listBuilder.toString();
                     if (list != null) {
                         msg.put("msg", list.substring(5));
                     } else msg.put("msg", "无,惨兮兮");

@@ -1,12 +1,15 @@
 package top.ncserver.chatsync;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Charsets;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,11 +18,12 @@ import top.ncserver.chatsync.V2.Until.Img;
 import top.ncserver.chatsync.V2.Until.ImgTools;
 import top.ncserver.chatsync.V2.Until.MsgTool;
 
-import java.io.File;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class Chatsync extends JavaPlugin {
@@ -36,6 +40,7 @@ public class Chatsync extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
         getServer().getMessenger().registerIncomingPluginChannel(this, channel,
                 (channel, player, message) -> {
                     String msg = read(message);
@@ -80,6 +85,7 @@ public class Chatsync extends JavaPlugin {
             this.getLogger().info("File: 已生成 config.yml 文件");
         }
         config = YamlConfiguration.loadConfiguration(configFile);
+        updateConfigFile();
 
         Metrics metrics = new Metrics(this, 17411);
         Bukkit.getPluginCommand("qqmsg").setExecutor(this);
@@ -93,6 +99,38 @@ public class Chatsync extends JavaPlugin {
         Object[] players = this.getServer().getOnlinePlayers().toArray();
         for (Object player : players) {
             ((Player) player).getPlayer().sendMessage("§a[消息同步]消息同步插件加载成功,当前版本:" + getPlugin(this.getClass()).getDescription().getVersion());
+        }
+    }
+
+    private void updateConfigFile() {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.yml");
+
+        FileConfiguration newConfig = new YamlConfiguration();
+        try {
+            newConfig.load((Reader) (new InputStreamReader(inputStream, Charsets.UTF_8)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!config.contains("ver")) {
+            config.addDefault("ver", 1);
+        }
+        if (config.getInt("ver") != newConfig.getInt("ver")) {
+            logger.info("更新配置文件");
+            Set<String> keys = newConfig.getKeys(false);
+            for (String key : keys) {
+                if (!config.contains(key)) {
+                    config.set(key, newConfig.get(key));
+                }
+            }
+            config.set("ver", newConfig.getInt("ver"));
+            try {
+                config.save(new File(Chatsync.getPlugin(Chatsync.class).getDataFolder(), "config.yml"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
