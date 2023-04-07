@@ -1,6 +1,8 @@
-ver: 2
+ver: 3
 ip: "127.0.0.1"
 port: 1111
+UnconditionalAutoSync: true
+AutoSyncPrefix: "#"
 qqMsgStyle:
   0: "[玩家][%s%]:%msg%"
   1: "[§c管理员§r][%s%]:%msg%"

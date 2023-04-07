@@ -8,6 +8,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import top.ncserver.chatsync.Chatsync;
 import top.ncserver.chatsync.Client;
 
 import java.lang.reflect.Method;
@@ -20,12 +21,22 @@ public class Listener implements org.bukkit.event.Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        msg.clear();
-        msg.put("type", "msg");
-        msg.put("sender", event.getPlayer().getDisplayName());
-        msg.put("msg", event.getMessage());
-        JSONObject jo = new JSONObject(msg);
-        MsgTool.msgSend(Client.session, jo.toJSONString());
+        if (Chatsync.UnconditionalAutoSync) {
+            msg.clear();
+            msg.put("type", "msg");
+            msg.put("sender", event.getPlayer().getDisplayName());
+            msg.put("msg", event.getMessage());
+            JSONObject jo = new JSONObject(msg);
+            MsgTool.msgSend(Client.session, jo.toJSONString());
+        } else if (event.getMessage().startsWith(Chatsync.AutoSyncPrefix)) {
+            msg.clear();
+            msg.put("type", "msg");
+            msg.put("sender", event.getPlayer().getDisplayName());
+            msg.put("msg", event.getMessage().replaceFirst(Chatsync.AutoSyncPrefix, ""));
+            JSONObject jo = new JSONObject(msg);
+            MsgTool.msgSend(Client.session, jo.toJSONString());
+        }
+
 
     }
 

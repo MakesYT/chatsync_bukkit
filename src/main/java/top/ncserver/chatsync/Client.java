@@ -57,7 +57,7 @@ public class Client extends BukkitRunnable {
                                         } catch (InterruptedException e) {
                                             throw new RuntimeException(e);
                                         }
-                                        connection(Chatsync.getPlugin(Chatsync.class).config.getString("ip"), Chatsync.getPlugin(Chatsync.class).config.getInt("port"));
+                                        connection(Chatsync.config.getString("ip"), Chatsync.config.getInt("port"));
                                     }
                                     this.cancel();
                                 }
@@ -87,7 +87,7 @@ public class Client extends BukkitRunnable {
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
-                        connection(Chatsync.getPlugin(Chatsync.class).config.getString("ip"), Chatsync.getPlugin(Chatsync.class).config.getInt("port"));
+                        connection(Chatsync.config.getString("ip"), Chatsync.config.getInt("port"));
                     }
                     this.cancel();
                 }

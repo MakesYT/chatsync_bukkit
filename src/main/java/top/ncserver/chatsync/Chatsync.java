@@ -35,6 +35,8 @@ public class Chatsync extends JavaPlugin {
 
     private static final String channel = "chatimg:img";
     public static boolean isOnDisable = false;
+    public static boolean UnconditionalAutoSync = true;
+    public static String AutoSyncPrefix = "#";
     ///接收来自客户端的图片,但由于同步原因,使用uuid作为唯一键,防止冲突
     public static Map<String, Img> imgMap = new LinkedHashMap<String, Img>();
 
@@ -86,7 +88,11 @@ public class Chatsync extends JavaPlugin {
         }
         config = YamlConfiguration.loadConfiguration(configFile);
         updateConfigFile();
-
+        {
+            //加载配置
+            UnconditionalAutoSync = config.getBoolean("UnconditionalAutoSync");
+            AutoSyncPrefix = config.getString("AutoSyncPrefix");
+        }
         Metrics metrics = new Metrics(this, 17411);
         Bukkit.getPluginCommand("qqmsg").setExecutor(this);
         Bukkit.getPluginManager().registerEvents(new top.ncserver.chatsync.V2.Until.Listener(), this);
