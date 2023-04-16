@@ -31,7 +31,7 @@ public class Chatsync extends JavaPlugin {
     private static final int IDX = 6969;
     Client c;
     Map<String, Object> msg = new HashMap<>();
-    public static YamlConfiguration config;
+    public static YamlConfiguration config = new YamlConfiguration();
 
     private static final String channel = "chatimg:img";
     public static boolean isOnDisable = false;
@@ -87,7 +87,14 @@ public class Chatsync extends JavaPlugin {
             saveResource("config.yml", true);
             this.getLogger().info("File: 已生成 config.yml 文件");
         }
-        config = YamlConfiguration.loadConfiguration(configFile);
+
+        try {
+            config.load((Reader) (new InputStreamReader(new FileInputStream(configFile.getAbsoluteFile()), StandardCharsets.UTF_8)));
+        } catch (IOException | InvalidConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+
+
         updateConfigFile();
         {
             //加载配置
