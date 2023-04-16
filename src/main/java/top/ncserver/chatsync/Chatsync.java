@@ -71,6 +71,7 @@ public class Chatsync extends JavaPlugin {
 
                                 Object[] players = Chatsync.getPlugin(Chatsync.class).getServer().getOnlinePlayers().toArray();
                                 ImgTools.sendImg("[" + jsonObject.get("sender").getAsString() + "]:", players, img.getData());
+                                imgMap.remove(imgID);
                             }
 
                         } catch (Exception e) {
