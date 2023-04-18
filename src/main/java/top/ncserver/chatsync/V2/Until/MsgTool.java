@@ -65,7 +65,7 @@ public class MsgTool {
                     }
                     String list = listBuilder.toString();
                     if (list != null) {
-                        msg.put("msg", list.substring(5));
+                        msg.put("msg", list.substring(1));
                     } else msg.put("msg", "无,惨兮兮");
                     JSONObject jo = new JSONObject(msg);
                     msgSend(session,jo.toJSONString());
