@@ -35,20 +35,25 @@ public class Client extends BukkitRunnable {
                         throw new RuntimeException(e);
                     }
                 }
-                boolean clientmsg = Chatsync.config.getBoolean("clientmsg");
                 @Override
                 public void stateEvent0(AioSession session, StateMachineEnum stateMachineEnum, Throwable throwable) {
                     if (stateMachineEnum.equals(StateMachineEnum.NEW_SESSION)){
                         isConnected=true;
                         logger.info("连接成功");
-                        if (clientmsg) {
-                        Object[] players = Chatsync.getPlugin(Chatsync.class).getServer().getOnlinePlayers().toArray();
-                        for (Object player : players) {
-                            ((Player) player).getPlayer().sendMessage("消息同步连接成功");
-                        }
+                        if (Chatsync.config.getBoolean("NotifyPlayerChatsyncState")) {
+                            Object[] players = Chatsync.getPlugin(Chatsync.class).getServer().getOnlinePlayers().toArray();
+                            for (Object player : players) {
+                                ((Player) player).getPlayer().sendMessage("消息同步连接成功");
+                            }
                         }
                     }else if (stateMachineEnum.equals(StateMachineEnum.SESSION_CLOSED)){
                         logger.warning("连接丢失");
+                        if (Chatsync.config.getBoolean("NotifyPlayerChatsyncState")) {
+                            Object[] players = Chatsync.getPlugin(Chatsync.class).getServer().getOnlinePlayers().toArray();
+                            for (Object player : players) {
+                                ((Player) player).getPlayer().sendMessage("消息同步连接丢失");
+                            }
+                        }
                         isConnected = false;
                         if (!Chatsync.isOnDisable) {
                             new BukkitRunnable() {
