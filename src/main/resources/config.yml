@@ -1,8 +1,13 @@
-ver: 3
+# 配置文件版本号 请勿更改
+ver: 4
+# mirai的ip
 ip: "127.0.0.1"
+# mirai的端口号
 port: 1111
 UnconditionalAutoSync: true
 AutoSyncPrefix: "#"
+# 客户端聊天栏是否显示连接成功
+NotifyPlayerChatsyncState: true
 qqMsgStyle:
   0: "[玩家][%s%]:%msg%"
   1: "[§c管理员§r][%s%]:%msg%"
