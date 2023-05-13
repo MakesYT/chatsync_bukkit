@@ -64,7 +64,7 @@ public class MsgTool {
                         listBuilder.append(",").append(((Player) player).getPlayer().getDisplayName());
                     }
                     String list = listBuilder.toString();
-                    if (list != null) {
+                    if (list.length() > 0) {
                         msg.put("msg", list.substring(1));
                     } else msg.put("msg", "无,惨兮兮");
                     JSONObject jo = new JSONObject(msg);
