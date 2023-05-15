@@ -9,6 +9,10 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>quickshop-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
     </repositories>
     <groupId>top.ncserver</groupId>
     <artifactId>chatsync_bukkit</artifactId>
@@ -73,6 +77,7 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/spigot-1.16.5.jar</systemPath>
         </dependency>
+
     </dependencies>
 
 </project>

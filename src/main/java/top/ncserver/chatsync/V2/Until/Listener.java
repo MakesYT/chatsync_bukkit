@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import top.ncserver.chatsync.Chatsync;
 import top.ncserver.chatsync.Client;
+import top.ncserver.chatsync.V2.Until.hook.HookManager;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -24,6 +25,9 @@ public class Listener implements org.bukkit.event.Listener {
     public void onChat(AsyncPlayerChatEvent event) {
 
         if (Chatsync.UnconditionalAutoSync) {
+            if (!HookManager.hooks.isEmpty())
+                if (HookManager.check(event.getMessage()))
+                    return;
             msg.clear();
             msg.put("type", "msg");
             msg.put("sender", event.getPlayer().getDisplayName());

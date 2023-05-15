@@ -17,6 +17,7 @@ import top.ncserver.chatsync.Until.Metrics;
 import top.ncserver.chatsync.V2.Until.Img;
 import top.ncserver.chatsync.V2.Until.ImgTools;
 import top.ncserver.chatsync.V2.Until.MsgTool;
+import top.ncserver.chatsync.V2.Until.hook.HookManager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +43,7 @@ public class Chatsync extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
+        HookManager.initHooks();
         getServer().getMessenger().registerIncomingPluginChannel(this, channel,
                 (channel, player, message) -> {
                     String msg = read(message);
