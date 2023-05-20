@@ -1,9 +1,11 @@
 # 配置文件版本号 请勿更改
-ver: 4
+ver: 5
 # mirai的ip
 ip: "127.0.0.1"
 # mirai的端口号
 port: 1111
+# 服务器名字
+ServerName: "Test Server"
 UnconditionalAutoSync: true
 AutoSyncPrefix: "#"
 # 客户端聊天栏是否显示连接成功

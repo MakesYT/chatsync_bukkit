@@ -1,6 +1,7 @@
 package top.ncserver.chatsync;
 
 
+import com.alibaba.fastjson.JSONObject;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.smartboot.socket.StateMachineEnum;
@@ -11,6 +12,8 @@ import org.smartboot.socket.transport.AioSession;
 import top.ncserver.chatsync.V2.Until.MsgTool;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -37,8 +40,8 @@ public class Client extends BukkitRunnable {
                 }
                 @Override
                 public void stateEvent0(AioSession session, StateMachineEnum stateMachineEnum, Throwable throwable) {
-                    if (stateMachineEnum.equals(StateMachineEnum.NEW_SESSION)){
-                        isConnected=true;
+                    if (stateMachineEnum.equals(StateMachineEnum.NEW_SESSION)) {
+                        isConnected = true;
                         logger.info("连接成功");
                         if (Chatsync.config.getBoolean("NotifyPlayerChatsyncState")) {
                             Object[] players = Chatsync.getPlugin(Chatsync.class).getServer().getOnlinePlayers().toArray();
@@ -46,6 +49,11 @@ public class Client extends BukkitRunnable {
                                 ((Player) player).getPlayer().sendMessage("消息同步连接成功");
                             }
                         }
+                        Map<String, Object> msg1 = new HashMap<>();
+                        msg1.put("type", "init");
+                        msg1.put("name", Chatsync.config.getString("ServerName"));
+                        JSONObject jo = new JSONObject(msg1);
+                        MsgTool.msgSend(session, jo.toJSONString());
                     }else if (stateMachineEnum.equals(StateMachineEnum.SESSION_CLOSED)){
                         logger.warning("连接丢失");
                         if (Chatsync.config.getBoolean("NotifyPlayerChatsyncState")) {
