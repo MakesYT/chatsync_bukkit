@@ -77,8 +77,6 @@ public class MsgTool {
                     msg.put("online", players.length);
                     StringBuilder listBuilder = new StringBuilder();
                     for (Object player : players) {
-                        if (((Player) player).getPlayer().hasPermission("chatsync.invisible"))
-                            continue;
                         listBuilder.append(",").append(((Player) player).getPlayer().getDisplayName());
                     }
                     String list = listBuilder.toString();
