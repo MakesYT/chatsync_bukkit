@@ -23,7 +23,9 @@ public class Listener implements org.bukkit.event.Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent event) {
-
+        if (event.getPlayer().hasPermission("chatsync.invisibleMsg")) {
+            return;
+        }
         if (Chatsync.UnconditionalAutoSync) {
             if (!HookManager.hooks.isEmpty())
                 if (HookManager.check(event.getMessage()))
@@ -46,8 +48,11 @@ public class Listener implements org.bukkit.event.Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
+        if (event.getEntity().hasPermission("chatsync.invisible")) {
+            return;
+        }
         msg.clear();
         msg.put("type", "playerJoinAndQuit");
         msg.put("player", event.getPlayer().getDisplayName());
@@ -67,8 +72,11 @@ public class Listener implements org.bukkit.event.Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onQuit(PlayerQuitEvent event) {
+        if (event.getPlayer().hasPermission("chatsync.invisible")) {
+            return;
+        }
         msg.clear();
         msg.put("type", "playerJoinAndQuit");
         msg.put("player", event.getPlayer().getDisplayName());
@@ -77,9 +85,11 @@ public class Listener implements org.bukkit.event.Listener {
         MsgTool.msgSend(Client.session, jo.toJSONString());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDeath(PlayerDeathEvent event) {
-
+        if (event.getEntity().hasPermission("chatsync.invisible")) {
+            return;
+        }
         msg.clear();
         msg.put("type", "playerDeath");
         msg.put("player", event.getEntity().getDisplayName());
