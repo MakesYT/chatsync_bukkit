@@ -61,6 +61,8 @@ public class MsgTool {
                     msg.put("online", players.length);
                     StringBuilder listBuilder = new StringBuilder();
                     for (Object player : players) {
+                        if (((Player) player).getPlayer().hasPermission("chatsync.invisible"))
+                            continue;
                         listBuilder.append(",").append(((Player) player).getPlayer().getDisplayName());
                     }
                     String list = listBuilder.toString();
@@ -69,6 +71,22 @@ public class MsgTool {
                     } else msg.put("msg", "无,惨兮兮");
                     JSONObject jo = new JSONObject(msg);
                     msgSend(session,jo.toJSONString());
+                } else if (jsonObject.getString("command").equals("/ls!") && jsonObject.getInteger("permission") >= 1) {
+                    Chatsync.getPlugin(Chatsync.class).logger.info("QQ群[" + jsonObject.getString("sender") + "]查询了所有玩家在线数量(无视权限)");
+                    msg.put("type", "playerList");
+                    msg.put("online", players.length);
+                    StringBuilder listBuilder = new StringBuilder();
+                    for (Object player : players) {
+                        if (((Player) player).getPlayer().hasPermission("chatsync.invisible"))
+                            continue;
+                        listBuilder.append(",").append(((Player) player).getPlayer().getDisplayName());
+                    }
+                    String list = listBuilder.toString();
+                    if (list.length() > 0) {
+                        msg.put("msg", list.substring(1));
+                    } else msg.put("msg", "无,惨兮兮");
+                    JSONObject jo = new JSONObject(msg);
+                    msgSend(session, jo.toJSONString());
                 } else {
                     Chatsync.getPlugin(Chatsync.class).logger.info("QQ群[" + jsonObject.getString("sender") + "]执行了" + jsonObject.getString("command"));
                     msg.put("type", "command");
