@@ -58,20 +58,24 @@ public class MsgTool {
                 if (jsonObject.getString("command").equals("/ls")) {
                     Chatsync.getPlugin(Chatsync.class).logger.info("QQ群[" + jsonObject.getString("sender") + "]查询了玩家在线数量");
                     msg.put("type", "playerList");
-                    msg.put("online", players.length);
+
                     StringBuilder listBuilder = new StringBuilder();
+                    int invise=0;
                     for (Object player : players) {
-                        if (((Player) player).getPlayer().hasPermission("chatsync.invisible"))
+                        if (((Player) player).getPlayer().hasPermission("chatsync.invisible")) {
+                            invise++;
                             continue;
+                        }
                         listBuilder.append(",").append(((Player) player).getPlayer().getDisplayName());
                     }
                     String list = listBuilder.toString();
                     if (list.length() > 0) {
                         msg.put("msg", list.substring(1));
+                        msg.put("online", players.length-invise);
                     } else msg.put("msg", "无,惨兮兮");
                     JSONObject jo = new JSONObject(msg);
                     msgSend(session,jo.toJSONString());
-                } else if (jsonObject.getString("command").equals("/ls!") && jsonObject.getInteger("permission") >= 1) {
+                } else if (jsonObject.getString("command").equals("/ls!") ) {
                     Chatsync.getPlugin(Chatsync.class).logger.info("QQ群[" + jsonObject.getString("sender") + "]查询了所有玩家在线数量(无视权限)");
                     msg.put("type", "playerList");
                     msg.put("online", players.length);
