@@ -21,7 +21,7 @@ public class Listener implements org.bukkit.event.Listener {
     private static final String channel = "chatimg:img";
     Map<String, Object> msg = new HashMap<>();
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler()
     public void onChat(AsyncPlayerChatEvent event) {
         if (event.getPlayer().hasPermission("chatsync.invisibleMsg")) {
             return;
@@ -48,7 +48,7 @@ public class Listener implements org.bukkit.event.Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler()
     public void onJoin(PlayerJoinEvent event) {
         if (event.getPlayer().hasPermission("chatsync.invisible")) {
             return;
@@ -72,7 +72,7 @@ public class Listener implements org.bukkit.event.Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler()
     public void onQuit(PlayerQuitEvent event) {
         if (event.getPlayer().hasPermission("chatsync.invisible")) {
             return;
@@ -85,7 +85,7 @@ public class Listener implements org.bukkit.event.Listener {
         MsgTool.msgSend(Client.session, jo.toJSONString());
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler()
     public void onDeath(PlayerDeathEvent event) {
         if (event.getEntity().hasPermission("chatsync.invisible")) {
             return;
