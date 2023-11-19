@@ -26,7 +26,7 @@ public class AioServer {
         processor.addPlugin(new HeartPlugin<String>(5, 9, TimeUnit.SECONDS) {
             @Override
             public void sendHeartRequest(AioSession session) throws IOException {
-                System.out.println(1);
+               // System.out.println(1);
                 WriteBuffer writeBuffer = session.writeBuffer();
                 byte[] content = "heart message".getBytes();
                 writeBuffer.writeInt(content.length);

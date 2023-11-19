@@ -43,7 +43,7 @@ public class ImgTools {
                     JSONObject temp = json;
                     temp.put("index", i);
                     temp.put("data", split[i]);
-                    System.out.println("发送数据包 " + temp.toJSONString());
+                    //System.out.println("发送数据包 " + i);
                     for (Object player1 : player) {
                         send((Player) player1, temp.toJSONString());
                     }
