@@ -52,6 +52,10 @@ public class Client extends BukkitRunnable {
                         Map<String, Object> msg1 = new HashMap<>();
                         msg1.put("type", "init");
                         msg1.put("name", Chatsync.config.getString("ServerName"));
+                        if (Chatsync.config.getInt("GourpID")!=111){
+                            msg1.put("groupId",Chatsync.config.getInt("GourpID"));
+                        }
+
                         JSONObject jo = new JSONObject(msg1);
                         MsgTool.msgSend(session, jo.toJSONString());
                     }else if (stateMachineEnum.equals(StateMachineEnum.SESSION_CLOSED)){
